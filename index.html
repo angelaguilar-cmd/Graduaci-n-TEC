@@ -771,7 +771,7 @@
                         <!-- Sección de acompañantes (Solo visible si marcan Misa o Ceremonia) -->
                         <div id="seccion-misa-ceremonia">
                             <div class="form-grupo" style="margin-bottom: 0;">
-                                <label for="num-acompanantes" style="color: var(--color-texto);">Acompañantes para Misa y Ceremonia (Máx. 5)</label>
+                                <label for="num-acompanantes" style="color: var(--color-texto);">Número de acompañantes para Misa y Ceremonia (Máx. 8)</label>
                                 <select id="num-acompanantes" class="form-control">
                                     <option value="0">Ninguno (Asistiré solo/a)</option>
                                     <option value="1">1 Acompañante</option>
@@ -779,12 +779,12 @@
                                     <option value="3">3 Acompañantes</option>
                                     <option value="4">4 Acompañantes</option>
                                     <option value="5">5 Acompañantes</option>
+                                    <option value="6">6 Acompañantes</option>
+                                    <option value="7">7 Acompañantes</option>
+                                    <option value="8">8 Acompañantes</option>
                                 </select>
                             </div>
                         </div>
-
-                        <!-- Campos dinámicos de nombres de acompañantes -->
-                        <div id="campos-acompanantes"></div>
 
                         <div class="form-grupo" style="margin-top: 2rem;">
                             <label for="comentarios">Comentarios adicionales (Opcional)</label>
@@ -1042,7 +1042,6 @@
         }
 
         const selAcomp = document.getElementById('num-acompanantes');
-        const divAcomp = document.getElementById('campos-acompanantes');
 
         // Esta función decide si mostrar el selector de acompañantes o no
         function toggleCamposAsistencia() {
@@ -1056,25 +1055,8 @@
             } else {
                 seccion.style.display = 'none';
                 selAcomp.value = "0"; // Reinicia a 0
-                selAcomp.dispatchEvent(new Event('change')); // Fuerza a ocultar nombres
             }
         }
-
-        // Esta función dibuja los campos de los nombres
-        selAcomp.addEventListener('change', function() {
-            const num = parseInt(this.value);
-            divAcomp.innerHTML = '';
-            if (num > 0) {
-                divAcomp.style.display = 'block';
-                let html = '<p style="font-size:0.9rem; margin-bottom:10px;">Nombre(s) de tu(s) acompañante(s):</p>';
-                for (let i = 1; i <= num; i++) {
-                    html += `<div class="form-grupo"><input type="text" id="acomp-${i}" class="form-control" required placeholder="Acompañante ${i} *"></div>`;
-                }
-                divAcomp.innerHTML = html;
-            } else {
-                divAcomp.style.display = 'none';
-            }
-        });
 
         // Enviar WhatsApp
         document.getElementById('form-rsvp').addEventListener('submit', function(e) {
@@ -1097,10 +1079,6 @@
             
             if (mis || cer) {
                 msj += `\n*Acompañantes (Misa/Ceremonia):* ${numMisaCer}\n`;
-                if (numMisaCer > 0) { 
-                    msj += `*Nombres:*\n`; 
-                    for (let i=1; i<=numMisaCer; i++) msj += `- ${document.getElementById(`acomp-${i}`).value.trim()}\n`; 
-                }
             }
 
             if (com) msj += `\n*Comentarios:* ${com}`;
